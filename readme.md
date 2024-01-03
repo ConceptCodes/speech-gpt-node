@@ -7,12 +7,14 @@
 A simple command-line tool that allows you to chat with your speeches.
 
 ## Features
-
+- Speech to text using OpenAI Whisper
+- VectorDB for storing speeches
 
 ## Prerequisites
 
 - Node v18+
 - PNPM v6+
+- FFMPEG v4+
 
 ## Installation
 
@@ -31,17 +33,17 @@ A simple command-line tool that allows you to chat with your speeches.
 
 3. Download whisper model of choice
 
-  ```sh
-  npx whisper-node download
-  ```
+    ```sh
+    npx whisper-node download
+    ```
 
 4. Grab an API key from [OpenAI](https://beta.openai.com/)
 
 5. Update your env file
 
-  ```sh
-  cp .env.example .env
-  ```
+    ```sh
+    cp .env.example .env
+    ```
 
 ## Usage
 To run the CLI, use the following command:

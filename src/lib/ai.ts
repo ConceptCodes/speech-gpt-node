@@ -9,36 +9,37 @@ import {
 } from "langchain/schema/runnable";
 import { StringOutputParser } from "langchain/schema/output_parser";
 import { formatDocumentsAsString } from "langchain/util/document";
-import { Document } from "langchain/dist/document";
 import chalk from "chalk";
 
 import { env } from "@/lib/env";
 
 export class AI {
   private model: ChatOpenAI;
-  private docs: Document[];
+  private vectorStore: VectorStoreRetriever | null;
 
   constructor() {
     this.model = new ChatOpenAI({
       openAIApiKey: env.OPEN_AI_API_KEY,
       verbose: env.NODE_ENV != "production",
     });
-    this.docs = [];
+    this.vectorStore = null;
   }
 
   async load(filename: string): Promise<void> {
     const loader = new TextLoader(filename);
-    this.docs = await loader.load();
+    const docs = await loader.load();
+    const vectorStore = await HNSWLib.fromDocuments(
+      docs,
+      new OpenAIEmbeddings({
+        openAIApiKey: env.OPEN_AI_API_KEY,
+        verbose: env.NODE_ENV != "production",
+      })
+    );
+    this.vectorStore = vectorStore.asRetriever();
   }
 
   async ask(question: string): Promise<void> {
     console.log(chalk.blueBright(`Question: ${question}`));
-
-    const vectorStore = await HNSWLib.fromDocuments(
-      this.docs,
-      new OpenAIEmbeddings()
-    );
-    const retriever = vectorStore.asRetriever();
 
     const prompt =
       PromptTemplate.fromTemplate(`Answer the question based only on the following context:
@@ -48,7 +49,7 @@ export class AI {
 
     const chain = RunnableSequence.from([
       {
-        context: retriever.pipe(formatDocumentsAsString),
+        context: this.vectorStore.pipe(formatDocumentsAsString),
         question: new RunnablePassthrough(),
       },
       prompt,

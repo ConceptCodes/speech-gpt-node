@@ -6,6 +6,7 @@ import { parseArgs } from "zod-args";
 import z from "zod";
 import * as readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
+import path from "path";
 
 import { AI } from "@/lib/ai";
 import { Transcriber } from "@/lib/transcribe";
@@ -23,9 +24,12 @@ async function main() {
   const transcriber = new Transcriber(args.filename);
 
   await transcriber.transcribe();
-  await transcriber.saveScript("script.txt");
 
-  ai.load("script.txt");
+  const scriptPath = path.join(__dirname, "script.txt");
+
+  await transcriber.saveScript(scriptPath);
+
+  ai.load(scriptPath);
 
   while (true) {
     const question = await rl.question("You: ");
