@@ -1,0 +1,35 @@
+{
+  "name": "chat-with-speech-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "npx tsx src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@t3-oss/env-core": "^0.7.1",
+    "boxen": "^7.1.1",
+    "chalk": "^5.3.0",
+    "clear": "^0.1.0",
+    "dotenv": "^16.3.1",
+    "figlet": "^1.7.0",
+    "langchain": "^0.0.214",
+    "whisper-node-ts": "^0.0.16",
+    "yargs": "^17.7.2",
+    "zod": "^3.22.4",
+    "zod-args": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/clear": "^0.1.4",
+    "@types/figlet": "^1.5.8",
+    "@types/node": "^20.10.6",
+    "@types/yargs": "^17.0.32",
+    "tsx": "^4.7.0"
+  },
+  "bin": {
+    "speech-gpt": "dist/index.js"
+  }
+}
