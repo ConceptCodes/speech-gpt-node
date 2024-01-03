@@ -1,5 +1,3 @@
-
-
 # Speech GPT
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -44,12 +42,22 @@ A simple command-line tool that allows you to chat with your speeches.
     ```sh
     cp .env.example .env
     ```
+6. Build the CLI
+  
+      ```sh
+      pnpm build
+      ```
+6. Install CLI globally
+  
+      ```sh
+      pnpm i -g
+      ```
 
 ## Usage
 To run the CLI, use the following command:
 
 ```sh
-pnpm start --filename=<path-to-file>
+speech-gpt --filename=<path-to-file>
 ```
 
 ## Roadmap
