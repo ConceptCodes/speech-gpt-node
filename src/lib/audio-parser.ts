@@ -4,7 +4,7 @@ import path from "path";
 import chalk from "chalk";
 import { exec } from "child_process";
 
-export class Transcriber {
+export class AudioParser {
   private filePath: string;
   private script: string;
   private fileName: string;
@@ -34,16 +34,16 @@ export class Transcriber {
       exec(command, (error, stdout, stderr) => {
         if (error) {
           console.log(chalk.red("Error converting file to wav"));
-          console.error(error);
-          return;
+          throw error;
         }
         console.log(stdout);
       });
 
       this.filePath = output;
+      console.log(chalk.green("File converted to wav\n"));
     } catch (err) {
       console.log(chalk.red("Error converting file to wav"));
-      console.error(err);
+      throw err;
     }
   }
 
@@ -51,7 +51,7 @@ export class Transcriber {
     try {
       if (!fs.existsSync(this.filePath)) throw new Error("File does not exist");
 
-      // await this.convertFileToWav();
+      await this.convertFileToWav();
 
       const options = {
         modelName: "base.en",
@@ -71,7 +71,7 @@ export class Transcriber {
       console.log(chalk.green("Transcription complete"));
     } catch (err) {
       console.log(chalk.red("Error transcribing file"));
-      console.error(err);
+      throw err;
     }
   }
 
@@ -87,7 +87,6 @@ export class Transcriber {
       await fs.promises.writeFile(filePath, this.script);
     } catch (err) {
       console.log(chalk.red("Error saving script"));
-      console.error(err);
       throw err;
     }
   }

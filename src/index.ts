@@ -9,7 +9,7 @@ import { stdin as input, stdout as output } from "node:process";
 import path from "path";
 
 import { AI } from "@/lib/ai";
-import { Transcriber } from "@/lib/transcribe";
+import { AudioParser } from "@/lib/audio-parser";
 
 async function main() {
   cliHeader();
@@ -21,7 +21,7 @@ async function main() {
   const rl = readline.createInterface({ input, output });
 
   const ai = new AI();
-  const transcriber = new Transcriber(args.filename);
+  const transcriber = new AudioParser(args.filename);
 
   await transcriber.transcribe();
 
@@ -34,8 +34,6 @@ async function main() {
   );
 
   await transcriber.saveScript(scriptPath);
-
-  console.log(scriptPath)
 
   await ai.load(scriptPath);
 
