@@ -1,3 +1,6 @@
 node_modules
 
 .env
+
+src/assets/output
+src/assets/scripts
