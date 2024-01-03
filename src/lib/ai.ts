@@ -31,7 +31,7 @@ export class AI {
       // verbose: env.NODE_ENV != "production",
     });
     this.vectorStore = null;
-    this.questionTemplate = `Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question, in its original language.
+    this.questionTemplate = `Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question, in English.
       Chat History:
       {chat_history}
       Follow Up Input: {question}
@@ -41,13 +41,15 @@ export class AI {
     this.answerTemplate = `Answer the question based only on the following context:
       {context}
 
+      If there isn't enough information below, say you don't know. If asking a clarifying question to the user would help, ask the question.
+
       Question: {question}
      `;
     this.chatHistory = [];
   }
 
   async load(filename: string): Promise<void> {
-    console.log(chalk.yellow("\nLoading VectorStore..."));
+    console.log(chalk.yellow("\nLoading VectorStore...\n"));
     const loader = new TextLoader(filename);
     const docs = await loader.load();
     const vectorStore = await HNSWLib.fromDocuments(
@@ -108,6 +110,6 @@ export class AI {
 
     this.chatHistory.push([question, result.content as string]);
 
-    console.log(chalk.greenBright(`\nSpeech GPT: ${result.content}\n\n`));
+    console.log(chalk.greenBright(`\nSpeech GPT:`) + `\n${result.content}\n\n`);
   }
 }
