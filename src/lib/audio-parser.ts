@@ -40,7 +40,7 @@ export class AudioParser {
       });
 
       this.filePath = output;
-      console.log(chalk.green("File converted to wav\n"));
+      console.log(chalk.green("Done\n"));
     } catch (err) {
       console.log(chalk.red("Error converting file to wav"));
       throw err;
@@ -60,7 +60,15 @@ export class AudioParser {
         },
       };
 
+      const start = performance.now();
       const transcript = await whisper(this.filePath, options);
+      const end = performance.now();
+
+      console.log(
+        chalk.yellow(
+          `\nTranscription took ${Math.round(end - start)} milliseconds`
+        )
+      );
 
       this.script = transcript
         .map(
@@ -68,7 +76,7 @@ export class AudioParser {
         )
         .join("\n");
 
-      console.log(chalk.green("Transcription complete"));
+      console.log(chalk.green("Done"));
     } catch (err) {
       console.log(chalk.red("Error transcribing file"));
       throw err;
