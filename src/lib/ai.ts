@@ -15,7 +15,7 @@ import { env } from "@/lib/env";
 
 export class AI {
   private model: ChatOpenAI;
-  private vectorStore: VectorStoreRetriever | null;
+  private vectorStore: any;
 
   constructor() {
     this.model = new ChatOpenAI({
@@ -26,6 +26,7 @@ export class AI {
   }
 
   async load(filename: string): Promise<void> {
+    console.log(chalk.yellow("\nLoading VectorStore..."));
     const loader = new TextLoader(filename);
     const docs = await loader.load();
     const vectorStore = await HNSWLib.fromDocuments(
@@ -39,8 +40,6 @@ export class AI {
   }
 
   async ask(question: string): Promise<void> {
-    console.log(chalk.blueBright(`Question: ${question}`));
-
     const prompt =
       PromptTemplate.fromTemplate(`Answer the question based only on the following context:
         {context}
@@ -57,10 +56,10 @@ export class AI {
       new StringOutputParser(),
     ]);
 
-    console.log(chalk.yellow("AI is thinking..."));
+    console.log(chalk.yellow("\nAI is thinking..."));
 
     const result = await chain.invoke(question);
 
-    console.log(chalk.blueBright(`Speech GPT: ${result}`));
+    console.log(chalk.blueBright(`\nSpeech GPT: ${result}`));
   }
 }

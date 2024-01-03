@@ -25,14 +25,22 @@ async function main() {
 
   await transcriber.transcribe();
 
-  const scriptPath = path.join(__dirname, "script.txt");
+  const scriptPath = path.join(
+    __dirname,
+    "assets",
+    "scripts",
+    `
+  ${transcriber.getFileName()}_script.txt`.trim()
+  );
 
   await transcriber.saveScript(scriptPath);
 
-  ai.load(scriptPath);
+  console.log(scriptPath)
+
+  await ai.load(scriptPath);
 
   while (true) {
-    const question = await rl.question("You: ");
+    const question = await rl.question(chalk.blueBright("Question: "));
     await ai.ask(question);
 
     if (question === "exit") rl.close();

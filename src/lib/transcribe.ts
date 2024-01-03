@@ -61,22 +61,18 @@ export class Transcriber {
       };
 
       const transcript = await whisper(this.filePath, options);
+
       this.script = transcript
         .map(
           (line: { start: number; end: number; speech: string }) => line.speech
         )
         .join("\n");
+
       console.log(chalk.green("Transcription complete"));
-      console.log(transcript);
     } catch (err) {
       console.log(chalk.red("Error transcribing file"));
       console.error(err);
-      throw err;
     }
-  }
-
-  getScript() {
-    return this.script;
   }
 
   getFileName() {
@@ -85,8 +81,10 @@ export class Transcriber {
 
   async saveScript(filePath: string) {
     try {
-      console.log(chalk.yellow("\nSaving script..."));
-      await fs.promises.writeFile(filePath, this.getScript());
+      console.log(
+        chalk.yellow(`\nSaving script to ${path.basename(filePath)}`)
+      );
+      await fs.promises.writeFile(filePath, this.script);
     } catch (err) {
       console.log(chalk.red("Error saving script"));
       console.error(err);
