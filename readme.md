@@ -52,4 +52,8 @@ To run the CLI, use the following command:
 pnpm start --filename=<path-to-file>
 ```
 
+## Roadmap
+- [ ] Store embeddings in local postgres DB
+- [ ] Add a cache for files 
+- [ ] clean up the CLI
 
