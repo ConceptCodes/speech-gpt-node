@@ -19,13 +19,7 @@ export class AudioParser {
     try {
       console.log(chalk.yellow("\nConverting file to wav..."));
 
-      const output = path.join(
-        __dirname,
-        "..",
-        "assets",
-        "output",
-        `${this.fileName}.wav`
-      );
+      const output = this.getOutputPath();
 
       const command = `ffmpeg -i ${this.filePath} -ar 16000 ${output}`;
 
@@ -49,15 +43,12 @@ export class AudioParser {
     try {
       if (!fs.existsSync(this.filePath)) throw new Error("File does not exist");
 
-      if (
-        fs.existsSync(
-          path.join(__dirname, "..", "assets", "output", `${this.fileName}.wav`)
-        )
-      ) {
+      if (fs.existsSync(this.getOutputPath())) {
         console.log(chalk.yellow("\nFound converted wav file from cache..."));
+        this.filePath = this.getOutputPath();
       } else {
         await this.convertFileToWav();
-        setTimeout(() => {}, 1000);
+        setTimeout(() => {}, 800);
       }
 
       const options = {
@@ -73,7 +64,7 @@ export class AudioParser {
 
       console.log(
         chalk.yellow(
-          `\nTranscription took ${Math.round(end - start)} milliseconds`
+          `\nTranscription took ${this.convertTime(end - start)} milliseconds`
         )
       );
 
@@ -90,10 +81,6 @@ export class AudioParser {
     }
   }
 
-  getFileName() {
-    return this.fileName;
-  }
-
   async save(filePath: string) {
     try {
       console.log(
@@ -104,5 +91,27 @@ export class AudioParser {
       console.log(chalk.red("Error saving script"));
       throw err;
     }
+  }
+
+  getFileName() {
+    return this.fileName;
+  }
+
+  getOutputPath() {
+    return path.join(
+      __dirname,
+      "..",
+      "assets",
+      "output",
+      `${this.fileName}.wav`
+    );
+  }
+
+  convertTime(millis: number) {
+    const minutes = Math.floor(millis / 60000);
+    const seconds = Number(((millis % 60000) / 1000).toFixed(0));
+    return seconds == 60
+      ? minutes + 1 + ":00"
+      : minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
   }
 }
