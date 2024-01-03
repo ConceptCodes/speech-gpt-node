@@ -32,7 +32,7 @@ A simple command-line tool that allows you to chat with your speeches.
 3. Download whisper model of choice
 
   ```sh
-  npx whisper-node-ts download
+  npx whisper-node download
   ```
 
 4. Grab an API key from [OpenAI](https://beta.openai.com/)

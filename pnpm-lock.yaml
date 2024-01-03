@@ -26,6 +26,9 @@ dependencies:
   langchain:
     specifier: ^0.0.214
     version: 0.0.214
+  whisper-node:
+    specifier: ^1.1.1
+    version: 1.1.1
   whisper-node-ts:
     specifier: ^0.0.16
     version: 0.0.16
@@ -1566,6 +1569,14 @@ packages:
     dependencies:
       '@types/readline-sync': 1.4.8
       '@types/shelljs': 0.8.15
+      readline-sync: 1.4.10
+      shelljs: 0.8.5
+    dev: false
+
+  /whisper-node@1.1.1:
+    resolution: {integrity: sha512-s1czx7pL0g63QOz0X9oAu7vOf4GzmFfQIy6J7msOAH5Yyiy+4a3w6+Uv0hiHvHkfBWk/+hG8nY3VEFdIapF83g==}
+    hasBin: true
+    dependencies:
       readline-sync: 1.4.10
       shelljs: 0.8.5
     dev: false
