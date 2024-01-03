@@ -13,9 +13,17 @@ import chalk from "chalk";
 
 import { env } from "@/lib/env";
 
+type ConversationalRetrievalQAChainInput = {
+  question: string;
+  chat_history: [string, string][];
+};
+
 export class AI {
   private model: ChatOpenAI;
   private vectorStore: any;
+  private questionTemplate: string;
+  private answerTemplate: string;
+  private chatHistory: [string, string][];
 
   constructor() {
     this.model = new ChatOpenAI({
@@ -23,6 +31,19 @@ export class AI {
       verbose: env.NODE_ENV != "production",
     });
     this.vectorStore = null;
+    this.questionTemplate = `Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question, in its original language.
+      Chat History:
+      {chat_history}
+      Follow Up Input: {question}
+      Standalone question:
+    `;
+
+    this.answerTemplate = `Answer the question based only on the following context:
+      {context}
+
+      Question: {question}
+     `;
+    this.chatHistory = [];
   }
 
   async load(filename: string): Promise<void> {
@@ -39,27 +60,54 @@ export class AI {
     this.vectorStore = vectorStore.asRetriever();
   }
 
+  private formatChatHistory(chatHistory: [string, string][]) {
+    const formattedDialogueTurns = chatHistory.map(
+      (dialogueTurn) =>
+        `Human: ${dialogueTurn[0]}\nAssistant: ${dialogueTurn[1]}`
+    );
+    return formattedDialogueTurns.join("\n");
+  }
+
   async ask(question: string): Promise<void> {
-    const prompt =
-      PromptTemplate.fromTemplate(`Answer the question based only on the following context:
-        {context}
+    const CONDENSE_QUESTION_PROMPT = PromptTemplate.fromTemplate(
+      this.questionTemplate
+    );
 
-        Question: {question}`);
+    const ANSWER_PROMPT = PromptTemplate.fromTemplate(this.answerTemplate);
 
-    const chain = RunnableSequence.from([
+    const standaloneQuestionChain = RunnableSequence.from([
       {
-        context: this.vectorStore.pipe(formatDocumentsAsString),
-        question: new RunnablePassthrough(),
+        question: (input: ConversationalRetrievalQAChainInput) =>
+          input.question,
+        chat_history: (input: ConversationalRetrievalQAChainInput) =>
+          this.formatChatHistory(input.chat_history),
       },
-      prompt,
+      CONDENSE_QUESTION_PROMPT,
       this.model,
       new StringOutputParser(),
     ]);
 
+    const answerChain = RunnableSequence.from([
+      {
+        context: this.vectorStore.pipe(formatDocumentsAsString),
+        question: new RunnablePassthrough(),
+      },
+      ANSWER_PROMPT,
+      this.model,
+    ]);
+
+    const conversationalRetrievalQAChain =
+      standaloneQuestionChain.pipe(answerChain);
+
     console.log(chalk.yellow("\nAI is thinking..."));
 
-    const result = await chain.invoke(question);
+    const result = await conversationalRetrievalQAChain.invoke({
+      question: question,
+      chat_history: this.chatHistory,
+    });
 
-    console.log(chalk.blueBright(`\nSpeech GPT: ${result}`));
+    this.chatHistory.push([question, result.content as string]);
+
+    console.log(chalk.blueBright(`\nSpeech GPT: ${result.content}`));
   }
 }
