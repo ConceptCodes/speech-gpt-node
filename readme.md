@@ -110,4 +110,5 @@ Question:
 - [ ] Store embeddings in local postgres DB
 - [ ] Add a cache for files 
 - [ ] clean up the CLI
+- [ ] Add timestamp sources to the response
 
