@@ -1,12 +1,14 @@
+#! /usr/bin/env node
+
 import chalk from "chalk";
 import clear from "clear";
 import figlet from "figlet";
-import { parseArgs } from "zod-args";
-// import pjson from "pjson";
-import z from "zod";
 import * as readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 import path from "path";
+import * as z from "zod";
+import { Command } from "commander";
+import fs from "fs";
 
 import { AI } from "@/lib/ai";
 import { AudioParser } from "@/lib/audio-parser";
@@ -14,26 +16,51 @@ import { AudioParser } from "@/lib/audio-parser";
 async function main() {
   cliHeader();
 
-  const args = parseArgs({
-    filename: z.string().regex(/\.(mp3|wav)$/),
-  });
+  const program = new Command();
+
+  program
+    .version("1.0.0")
+    .description("A CLI for chatting with audio files using GPT-3")
+    .option("-f, --filename  [value]", "Audio file to transcribe")
+    .parse(process.argv);
+
+  const options = program.opts();
+
+  if (!process.argv.slice(2).length) {
+    program.outputHelp();
+  }
 
   const rl = readline.createInterface({ input, output });
 
-  const ai = new AI();
-  const transcriber = new AudioParser(args.filename);
+  if (!options.filename) {
+    console.log(chalk.redBright("Please provide an audio file"));
+    process.exit(1);
+  }
 
-  await transcriber.transcribe();
+  const schema = z.object({
+    filename: z.string().regex(/\.(wav|mp3)$/i),
+  });
+
+  await schema.parseAsync(options);
+
+  const ai = new AI();
+  const transcriber = new AudioParser(options.filename);
 
   const scriptPath = path.join(
     __dirname,
     "assets",
     "scripts",
     `
-  ${transcriber.getFileName()}_script.txt`.trim()
+    ${transcriber.getFileName()}_script.txt`.trim()
   );
 
-  await transcriber.saveScript(scriptPath);
+  // check if script exists,
+  if (!fs.existsSync(scriptPath)) {
+    await transcriber.transcribe();
+    await transcriber.save(scriptPath);
+  }
+
+  console.log(chalk.yellow("\nFound script from cache..."));
 
   await ai.load(scriptPath);
 
@@ -52,12 +79,6 @@ function cliHeader() {
       figlet.textSync("Speech GPT", { horizontalLayout: "full" })
     )
   );
-  // console.log(chalk.blue("     Author: ") + chalk.green(pjson.author));
-  // console.log(chalk.blue("    Version: ") + chalk.green(pjson.version));
-  // console.log(chalk.blue("    License: ") + chalk.green(pjson.license));
-  // console.log(
-  //   chalk.blue("Description: ") + chalk.green(pjson.description) + "\n"
-  // );
 }
 
 main().catch((err) => {
