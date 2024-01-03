@@ -50,7 +50,7 @@ A simple command-line tool that allows you to chat with your speeches.
 6. Install CLI globally
   
       ```sh
-      pnpm i -g
+      npm i -g
       ```
 
 ## Usage
@@ -68,7 +68,7 @@ speech-gpt --filename=<path-to-file>
          |_|                                                           
 
 Found converted wav file from cache...
-[whisper-node] Transcribing: /Users/<USER>/Desktop/phone.wav 
+[whisper-node] Transcribing: <path-to-file>/phone.wav 
 
 > 
 Transcription took 55515 milliseconds
