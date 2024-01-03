@@ -54,13 +54,13 @@ async function main() {
     ${transcriber.getFileName()}_script.txt`.trim()
   );
 
-  // check if script exists,
-  if (!fs.existsSync(scriptPath)) {
+  if (fs.existsSync(scriptPath)) {
+    console.log(chalk.yellow("\nFound script from cache..."));
+  } else {
+    console.log(chalk.red("\nCould not find script from cache..."));
     await transcriber.transcribe();
     await transcriber.save(scriptPath);
   }
-
-  console.log(chalk.yellow("\nFound script from cache..."));
 
   await ai.load(scriptPath);
 

@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import chalk from "chalk";
 import { exec } from "child_process";
+
 export class AudioParser {
   private filePath: string;
   private script: string;
@@ -49,13 +50,14 @@ export class AudioParser {
       if (!fs.existsSync(this.filePath)) throw new Error("File does not exist");
 
       if (
-        !fs.existsSync(
+        fs.existsSync(
           path.join(__dirname, "..", "assets", "output", `${this.fileName}.wav`)
         )
       ) {
-        await this.convertFileToWav();
-      } else {
         console.log(chalk.yellow("\nFound converted wav file from cache..."));
+      } else {
+        await this.convertFileToWav();
+        setTimeout(() => {}, 1000);
       }
 
       const options = {
