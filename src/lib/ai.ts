@@ -28,7 +28,7 @@ export class AI {
   constructor() {
     this.model = new ChatOpenAI({
       openAIApiKey: env.OPEN_AI_API_KEY,
-      verbose: env.NODE_ENV != "production",
+      // verbose: env.NODE_ENV != "production",
     });
     this.vectorStore = null;
     this.questionTemplate = `Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question, in its original language.
@@ -54,7 +54,7 @@ export class AI {
       docs,
       new OpenAIEmbeddings({
         openAIApiKey: env.OPEN_AI_API_KEY,
-        verbose: env.NODE_ENV != "production",
+        // verbose: env.NODE_ENV != "production",
       })
     );
     this.vectorStore = vectorStore.asRetriever();
@@ -108,6 +108,6 @@ export class AI {
 
     this.chatHistory.push([question, result.content as string]);
 
-    console.log(chalk.blueBright(`\nSpeech GPT: ${result.content}`));
+    console.log(chalk.greenBright(`\nSpeech GPT: ${result.content}\n\n`));
   }
 }

@@ -3,7 +3,6 @@ import fs from "fs";
 import path from "path";
 import chalk from "chalk";
 import { exec } from "child_process";
-
 export class AudioParser {
   private filePath: string;
   private script: string;
@@ -24,14 +23,12 @@ export class AudioParser {
         "..",
         "assets",
         "output",
-        `${new Date().getTime() + Math.floor(Math.random() * 1000)}_${
-          this.fileName
-        }.wav`
+        `${this.fileName}.wav`
       );
 
       const command = `ffmpeg -i ${this.filePath} -ar 16000 ${output}`;
 
-      exec(command, (error, stdout, stderr) => {
+      exec(command, (error, stdout, _) => {
         if (error) {
           console.log(chalk.red("Error converting file to wav"));
           throw error;
@@ -51,10 +48,18 @@ export class AudioParser {
     try {
       if (!fs.existsSync(this.filePath)) throw new Error("File does not exist");
 
-      await this.convertFileToWav();
+      if (
+        !fs.existsSync(
+          path.join(__dirname, "..", "assets", "output", `${this.fileName}.wav`)
+        )
+      ) {
+        await this.convertFileToWav();
+      } else {
+        console.log(chalk.yellow("\nFound converted wav file from cache..."));
+      }
 
       const options = {
-        modelName: "base.en",
+        modelName: "tiny.en",
         whisperOptions: {
           word_timestamps: false,
         },
@@ -87,7 +92,7 @@ export class AudioParser {
     return this.fileName;
   }
 
-  async saveScript(filePath: string) {
+  async save(filePath: string) {
     try {
       console.log(
         chalk.yellow(`\nSaving script to ${path.basename(filePath)}`)
