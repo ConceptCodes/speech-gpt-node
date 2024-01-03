@@ -4,3 +4,5 @@ node_modules
 
 src/assets/output
 src/assets/scripts
+
+dist
