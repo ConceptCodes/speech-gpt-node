@@ -64,7 +64,7 @@ export class AudioParser {
 
       console.log(
         chalk.yellow(
-          `\nTranscription took ${this.convertTime(end - start)} milliseconds`
+          `\nTranscription took ${this.convertTime(end - start)}`
         )
       );
 
@@ -112,6 +112,6 @@ export class AudioParser {
     const seconds = Number(((millis % 60000) / 1000).toFixed(0));
     return seconds == 60
       ? minutes + 1 + ":00"
-      : minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+      : minutes + "m " + (seconds < 10 ? "0" : "") + seconds + "s";
   }
 }
