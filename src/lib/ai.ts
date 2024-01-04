@@ -90,8 +90,7 @@ export class AI {
         "Given the following conversation about a transcript and a follow up question, rephrase the follow up question to be a standalone question."
       ),
       new MessagesPlaceholder("chat_history"),
-      AIMessagePromptTemplate.fromTemplate(`Follow Up Input: {question}
-Standalone question:`),
+      AIMessagePromptTemplate.fromTemplate(`Follow Up Input: {question}\nStandalone question:`),
     ]);
 
     const combineDocumentsPrompt = ChatPromptTemplate.fromMessages([
