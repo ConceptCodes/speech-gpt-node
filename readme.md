@@ -67,43 +67,56 @@ speech-gpt --filename=<path-to-file>
  |____/  | .__/   \___|  \___|  \___| |_| |_|    \____| |_|       |_|  
          |_|                                                           
 
-Found converted wav file from cache...
-[whisper-node] Transcribing: <path-to-file>/phone.wav 
+Could not find script from cache...
 
-> 
-Transcription took 55515 milliseconds
+Found converted wav file from cache...
+[whisper-node] Transcribing: <path-to-file>/dead_mall.wav 
+
+Transcription took 4m 44s
 Done
 
-Saving script to phone_script.txt
+Saving script to dead_mall_script.txt
 
 Loading VectorStore...
 
-Question: Why should i get this phone?
+Saving VectorStore...
 
-AI is thinking...
-
-Speech GPT: 
-Based on the given context, there is no explicit information provided on why someone should purchase the phone. The speaker discusses the lack of significant updates and mentions some new features such as crash detection, satellite connectivity, and a new camera. However, it ultimately depends on individual preferences and needs.
-
-
-Question: list reasons why i should not get this phone
+Question: how does the narrator feel about nft's?
 
 AI is thinking...
 
 Speech GPT:
-Based on the context provided, some possible reasons why you may not want to get this phone are:
-1. It is an incremental update and has minimal changes compared to the previous model.
-2. The design, button placement, and overall appearance of the phone are the same as the previous model.
-3. The display has the same resolution and refresh rate as the previous model.
-4. The storage options, battery size, charging speeds, and lightning port are unchanged.
-5. The phone uses the same A15 Bionic chip as the previous model, with only a slight improvement in GPU cores.
-6. The new features, such as crash detection and satellite connectivity, may not be essential or necessary for everyone.
-7. The camera improvements are minimal, and the differences between the photos taken with this phone and the previous model may not be significant.
-8. The video stabilization feature may introduce noise and softness in the footage.
-9. The phone's incremental updates may not justify the higher price compared to the previous model or other alternatives in the market.
+The narrator does not explicitly mention their opinion on NFTs in the given context.
 
 
-Question: 
+Question: are you sure
+
+AI is thinking...
+
+Speech GPT:
+There is no explicit mention of the narrator's opinion on NFTs in the given context.
+
+
+Question: whats does he feel about the metaverse?
+
+AI is thinking...
+
+Speech GPT:
+The narrator's opinion on the metaverse is not explicitly stated in the given context. However, they provide critical analysis and skepticism towards the concept, referring to it as a "rhetorical device" and highlighting the vague and incoherent nature of its definitions. They also mention that many people writing about the metaverse are salesmen who may not have considered if it would actually be practical or fulfilling. Therefore, the narrator seems to approach the concept with a degree of skepticism and questioning.
+
+
+Question: okay what are some key points?
+
+AI is thinking...
+
+Speech GPT:
+1. The metaverse is a rhetorical device and not an actual, tangible thing being built.
+2. There is no consensus definition of the metaverse, and it can encompass a wide range of ideas, sometimes conflicting with each other.
+3. The concept of the metaverse is often rooted in the present political and social values of the writer.
+4. The narrator criticizes salesmen who write about the inevitability of the metaverse without considering if it would actually be practical or enjoyable.
+5. The metaverse is often associated with virtual reality, but the limitations of VR technology and the human body make it a restrictive experience.
+6. Decentraland, a specific project attempting to create a metaverse, is seen by the narrator as a non-starter because it lacks key features like virtual reality.
+7. The narrator questions the viability and potential disappointment of the metaverse, suggesting that the future may not live up to the hype and could resemble a "dead mall."
 ```
 
 ## Roadmap
