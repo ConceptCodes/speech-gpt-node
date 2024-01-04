@@ -21,7 +21,7 @@ async function main() {
   program
     .version("1.0.0")
     .description("A CLI for chatting with audio files using GPT-3")
-    .option("-f, --filename  [value]", "Audio file to transcribe")
+    .option("-f, --filepath  [value]", "Audio file to transcribe")
     .parse(process.argv);
 
   const options = program.opts();
@@ -32,19 +32,19 @@ async function main() {
 
   const rl = readline.createInterface({ input, output });
 
-  if (!options.filename) {
+  if (!options.filepath) {
     console.log(chalk.redBright("Please provide an audio file"));
     process.exit(1);
   }
 
   const schema = z.object({
-    filename: z.string().regex(/\.(wav|mp3|mp4)$/i),
+    filepath: z.string().regex(/\.(wav|mp3|mp4)$/i),
   });
 
   await schema.parseAsync(options);
 
   const ai = new AI();
-  const transcriber = new AudioParser(options.filename);
+  const transcriber = new AudioParser(options.filepath);
 
   const scriptPath = path.join(
     __dirname,
