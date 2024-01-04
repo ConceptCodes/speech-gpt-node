@@ -37,17 +37,7 @@ export class AI {
   }
 
   async load(filename: string): Promise<void> {
-    if (
-      fs.existsSync(
-        path.join(
-          __dirname,
-          "..",
-          "assets",
-          "store",
-          path.basename(filename).split(".")[0]
-        )
-      )
-    ) {
+    if (fs.existsSync(this.getVectorStoreFileName(filename))) {
       console.log(chalk.yellow("\nFound vector store from cache...\n"));
       this.vectorStore = await HNSWLib.load(
         path.join(__dirname, "..", "assets", "store", path.basename(filename)),
@@ -75,13 +65,21 @@ export class AI {
 
       console.log(chalk.yellow("\nSaving VectorStore...\n"));
 
-      await this.vectorStore.save(
-        path.join(__dirname, "..", "assets", "store", path.basename(filename))
-      );
+      await this.vectorStore.save(this.getVectorStoreFileName(filename));
     }
     this.vectorStore = this.vectorStore.asRetriever({
       searchKwargs: { fetchK: 5 },
     });
+  }
+
+  getVectorStoreFileName(filename: string) {
+    return path.join(
+      __dirname,
+      "..",
+      "assets",
+      "store",
+      path.basename(filename).split(".")[0]
+    );
   }
 
   async ask(question: string): Promise<void> {
@@ -90,7 +88,9 @@ export class AI {
         "Given the following conversation about a transcript and a follow up question, rephrase the follow up question to be a standalone question."
       ),
       new MessagesPlaceholder("chat_history"),
-      AIMessagePromptTemplate.fromTemplate(`Follow Up Input: {question}\nStandalone question:`),
+      AIMessagePromptTemplate.fromTemplate(
+        `Follow Up Input: {question}\nStandalone question:`
+      ),
     ]);
 
     const combineDocumentsPrompt = ChatPromptTemplate.fromMessages([
