@@ -38,7 +38,7 @@ async function main() {
   }
 
   const schema = z.object({
-    filepath: z.string().regex(/\.(wav|mp3|mp4)$/i),
+    filepath: z.string(),
   });
 
   await schema.parseAsync(options);
