@@ -48,7 +48,7 @@ export class AudioParser {
         this.filePath = this.getOutputPath();
       } else {
         await this.convertFileToWav();
-        setTimeout(() => {}, 800);
+        setTimeout(() => {}, 2000);
       }
 
       const options = {
