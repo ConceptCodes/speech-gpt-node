@@ -1,5 +1,5 @@
 {
-  "name": "chat-with-speech-node",
+  "name": "speech-gpt-node",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -14,7 +14,6 @@
     "@langchain/community": "^0.0.13",
     "@t3-oss/env-core": "^0.7.1",
     "@xenova/transformers": "^2.13.3",
-    "boxen": "^7.1.1",
     "chalk": "^5.3.0",
     "clear": "^0.1.0",
     "commander": "^11.1.0",
@@ -22,11 +21,10 @@
     "figlet": "^1.7.0",
     "hnswlib-node": "^2.1.0",
     "langchain": "^0.0.214",
+    "node-llama-cpp": "^2.8.3",
     "whisper-node": "^1.1.1",
-    "whisper-node-ts": "^0.0.16",
     "yargs": "^17.7.2",
-    "zod": "^3.22.4",
-    "zod-args": "^0.1.0"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/clear": "^0.1.4",

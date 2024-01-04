@@ -13,6 +13,19 @@ import fs from "fs";
 import { AI } from "@/lib/ai";
 import { AudioParser } from "@/lib/audio-parser";
 
+function createAssetsDirectories() {
+  const assetsPath = path.join(__dirname, "assets", "output");
+  const scriptsPath = path.join(__dirname, "assets", "scripts");
+
+  if (!fs.existsSync(assetsPath)) {
+    fs.mkdirSync(assetsPath);
+  }
+
+  if (!fs.existsSync(scriptsPath)) {
+    fs.mkdirSync(scriptsPath);
+  }
+}
+
 async function main() {
   cliHeader();
 
@@ -43,6 +56,8 @@ async function main() {
 
   await schema.parseAsync(options);
 
+  createAssetsDirectories();
+
   const ai = new AI();
   const transcriber = new AudioParser(options.filepath);
 
@@ -65,7 +80,7 @@ async function main() {
   await ai.load(scriptPath);
 
   while (true) {
-    const question = await rl.question(chalk.blueBright("Question: "));
+    const question = await rl.question(chalk.blueBright("\n\nQuestion: "));
     await ai.ask(question);
 
     if (question === "exit") rl.close();

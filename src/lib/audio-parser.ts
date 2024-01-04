@@ -48,7 +48,7 @@ export class AudioParser {
         this.filePath = this.getOutputPath();
       } else {
         await this.convertFileToWav();
-        setTimeout(() => {}, 2000);
+        await new Promise((resolve) => setTimeout(resolve, 1500));
       }
 
       const options = {
@@ -63,9 +63,7 @@ export class AudioParser {
       const end = performance.now();
 
       console.log(
-        chalk.yellow(
-          `\nTranscription took ${this.convertTime(end - start)}`
-        )
+        chalk.yellow(`\nTranscription took ${this.convertTime(end - start)}`)
       );
 
       this.script = transcript

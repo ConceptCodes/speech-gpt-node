@@ -28,6 +28,8 @@ export class AI {
   constructor() {
     this.model = new ChatOpenAI({
       openAIApiKey: env.OPEN_AI_API_KEY,
+      streaming: true,
+      verbose: false,
     });
     this.vectorStore = null;
     this.memory = new BufferMemory({
@@ -40,7 +42,13 @@ export class AI {
     if (fs.existsSync(this.getVectorStoreFileName(filename))) {
       console.log(chalk.yellow("\nFound vector store from cache...\n"));
       this.vectorStore = await HNSWLib.load(
-        path.join(__dirname, "..", "assets", "store", path.basename(filename)),
+        path.join(
+          __dirname,
+          "..",
+          "assets",
+          "store",
+          path.basename(filename).split(".")[0]
+        ),
         new HuggingFaceTransformersEmbeddings({
           modelName: "Xenova/all-MiniLM-L6-v2",
         })
@@ -134,11 +142,21 @@ export class AI {
       combineDocumentsChain,
     ]);
 
-    console.log(chalk.yellow("\nAI is thinking..."));
-
-    const result = await conversationalQaChain.invoke({
-      question,
-    });
+    console.log(chalk.greenBright(`\nSpeech GPT:`));
+    const result = await conversationalQaChain.invoke(
+      {
+        question,
+      },
+      {
+        callbacks: [
+          {
+            handleLLMNewToken(token: string) {
+              process.stdout.write(token);
+            },
+          },
+        ],
+      }
+    );
 
     await this.memory.saveContext(
       {
@@ -148,7 +166,5 @@ export class AI {
         output: result,
       }
     );
-
-    console.log(chalk.greenBright(`\nSpeech GPT:`) + `\n${result}\n\n`);
   }
 }
