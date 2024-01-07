@@ -46,7 +46,7 @@ export class AI {
         })
       );
     } else {
-      console.log(chalk.yellow("\nLoading VectorStore...\n"));
+      console.log(chalk.yellow("\Creating VectorStore...\n"));
       const loader = new TextLoader(filename);
       let docs = await loader.load();
       const text_splitter = new RecursiveCharacterTextSplitter({
