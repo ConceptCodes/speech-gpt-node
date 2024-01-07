@@ -46,7 +46,7 @@ async function main() {
   const rl = readline.createInterface({ input, output });
 
   if (!options.filepath) {
-    console.log(chalk.redBright("Please provide an audio file"));
+    console.log(chalk.redBright("Please provide a valid file path"));
     process.exit(1);
   }
 
@@ -70,9 +70,9 @@ async function main() {
   );
 
   if (fs.existsSync(scriptPath)) {
-    console.log(chalk.yellow("\nFound script from cache..."));
+    console.log(chalk.yellow("\nCache: Found script...\n"));
   } else {
-    console.log(chalk.red("\nCould not find script from cache..."));
+    console.log(chalk.red("\nCache: Script not found...\n"));
     await transcriber.transcribe();
     await transcriber.save(scriptPath);
   }

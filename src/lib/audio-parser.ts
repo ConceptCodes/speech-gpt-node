@@ -44,7 +44,7 @@ export class AudioParser {
       if (!fs.existsSync(this.filePath)) throw new Error("File does not exist");
 
       if (fs.existsSync(this.getOutputPath())) {
-        console.log(chalk.yellow("\nFound converted wav file from cache..."));
+        console.log(chalk.yellow("\nCache: Found wav file...\n"));
         this.filePath = this.getOutputPath();
       } else {
         await this.convertFileToWav();
