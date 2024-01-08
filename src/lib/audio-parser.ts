@@ -7,12 +7,18 @@ import { exec } from "child_process";
 export class AudioParser {
   private filePath: string;
   private script: string;
-  private fileName: string;
 
   constructor(filePath: string) {
     this.filePath = filePath;
     this.script = "";
-    this.fileName = path.basename(this.filePath).split(".")[0];
+  }
+
+  setScript(script: string) {
+    this.script = script;
+  }
+
+  getFileName() {
+    return path.basename(this.filePath).split(".")[0];
   }
 
   async convertFileToWav() {
@@ -63,9 +69,7 @@ export class AudioParser {
       const end = performance.now();
 
       console.log(
-        chalk.yellow(
-          `\nTranscription took ${this.convertTime(end - start)}`
-        )
+        chalk.yellow(`\nTranscription took ${this.convertTime(end - start)}`)
       );
 
       this.script = transcript
@@ -93,17 +97,13 @@ export class AudioParser {
     }
   }
 
-  getFileName() {
-    return this.fileName;
-  }
-
   getOutputPath() {
     return path.join(
       __dirname,
       "..",
       "assets",
       "output",
-      `${this.fileName}.wav`
+      `${this.getFileName()}.wav`
     );
   }
 

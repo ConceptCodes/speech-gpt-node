@@ -40,13 +40,19 @@ export class AI {
     if (fs.existsSync(this.getVectorStoreFileName(filename))) {
       console.log(chalk.yellow("\nFound vector store from cache...\n"));
       this.vectorStore = await HNSWLib.load(
-        path.join(__dirname, "..", "assets", "store", path.basename(filename)),
+        path.join(
+          __dirname,
+          "..",
+          "assets",
+          "store",
+          path.basename(filename).split(".")[0]
+        ),
         new HuggingFaceTransformersEmbeddings({
           modelName: "Xenova/all-MiniLM-L6-v2",
         })
       );
     } else {
-      console.log(chalk.yellow("\Creating VectorStore...\n"));
+      console.log(chalk.yellow("Creating VectorStore...\n"));
       const loader = new TextLoader(filename);
       let docs = await loader.load();
       const text_splitter = new RecursiveCharacterTextSplitter({

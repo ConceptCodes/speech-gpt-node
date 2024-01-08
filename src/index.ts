@@ -12,6 +12,7 @@ import fs from "fs";
 
 import { AI } from "@/lib/ai";
 import { AudioParser } from "@/lib/audio-parser";
+import { downloadYoutubeVideo, extractVideoId } from "@/lib/utils";
 
 async function main() {
   cliHeader();
@@ -20,8 +21,9 @@ async function main() {
 
   program
     .version("1.0.0")
-    .description("A CLI for chatting with audio files using GPT-3")
+    .description("A CLI for chatting with audio files using GPT-4")
     .option("-f, --filepath  [value]", "Audio file to transcribe")
+    .option("-y, --youtube  [value]", "Youtube video to transcribe")
     .parse(process.argv);
 
   const options = program.opts();
@@ -32,19 +34,22 @@ async function main() {
 
   const rl = readline.createInterface({ input, output });
 
-  if (!options.filepath) {
-    console.log(chalk.redBright("Please provide an audio file"));
+  if (!options.filepath && !options.youtube) {
+    console.log(chalk.redBright("Please provide an audio file!"));
     process.exit(1);
   }
 
   const schema = z.object({
-    filepath: z.string(),
+    filepath: z.string().optional(),
+    youtube: z.string().url().optional(),
   });
 
   await schema.parseAsync(options);
 
   const ai = new AI();
-  const transcriber = new AudioParser(options.filepath);
+  const transcriber = new AudioParser(
+    options.filepath || extractVideoId(options.youtube)
+  );
 
   const scriptPath = path.join(
     __dirname,
@@ -58,17 +63,27 @@ async function main() {
     console.log(chalk.yellow("\nFound script from cache..."));
   } else {
     console.log(chalk.red("\nCould not find script from cache..."));
-    await transcriber.transcribe();
+    if (options.youtube) {
+      console.log(chalk.yellow("\nDownloading youtube video..."));
+      const script = await downloadYoutubeVideo(options.youtube);
+      transcriber.setScript(script);
+    } else {
+      await transcriber.transcribe();
+    }
     await transcriber.save(scriptPath);
+    console.log(chalk.green("Done\n"));
   }
 
   await ai.load(scriptPath);
 
   while (true) {
     const question = await rl.question(chalk.blueBright("Question: "));
+    if (question === "exit") {
+      rl.close();
+      console.log(chalk.greenBright("\nBye!"));
+      process.exit(0);
+    }
     await ai.ask(question);
-
-    if (question === "exit") rl.close();
   }
 }
 
