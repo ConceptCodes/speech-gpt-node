@@ -13,7 +13,7 @@ import fs from "fs";
 import { AI } from "@/lib/ai";
 import { AudioParser } from "@/lib/audio-parser";
 
-async function main() {
+export async function main() {
   cliHeader();
 
   const program = new Command();
